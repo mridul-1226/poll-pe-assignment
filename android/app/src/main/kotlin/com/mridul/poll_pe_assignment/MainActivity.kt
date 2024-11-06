@@ -1,0 +1,5 @@
+package com.mridul.poll_pe_assignment
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity()

@@ -189,6 +189,7 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
                                   color: Colors.grey,
                                   label: 'Vote',
                                   onTap: () {
+                                    final postCubit = context.read<PostCubit>();
                                     showModalBottomSheet(
                                       context: context,
                                       isScrollControlled: true,
@@ -197,7 +198,10 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
                                           top: Radius.circular(20),
                                         ),
                                       ),
-                                      builder: (_) => VoteModal(post: post),
+                                      builder: (_) => VoteModal(
+                                        post: post,
+                                        postCubit: postCubit,
+                                      ),
                                     );
                                   },
                                 ),

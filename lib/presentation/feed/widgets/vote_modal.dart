@@ -5,8 +5,13 @@ import 'package:poll_pe_assignment/presentation/feed/bloc/post_cubit.dart';
 
 class VoteModal extends StatelessWidget {
   final Post post;
+  final PostCubit postCubit;
 
-  const VoteModal({super.key, required this.post});
+  const VoteModal({
+    super.key,
+    required this.post,
+    required this.postCubit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +66,7 @@ class VoteModal extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12.0),
       child: InkWell(
         onTap: () {
-          context.read<PostCubit>().voteForOption(option.label);
+          postCubit.voteForOption(option.label);
           Navigator.pop(context);
         },
         child: Container(
@@ -76,7 +81,7 @@ class VoteModal extends StatelessWidget {
                 value: option.label,
                 groupValue: null,
                 onChanged: (_) {
-                  context.read<PostCubit>().voteForOption(option.label);
+                  postCubit.voteForOption(option.label);
                   Navigator.pop(context);
                 },
               ),

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:poll_pe_assignment/domain/models/post_model.dart';
 import 'package:poll_pe_assignment/presentation/feed/bloc/post_cubit.dart';
 
 class VoteModal extends StatelessWidget {
   final Post post;
   final PostCubit postCubit;
+  final Box<Post> postBox;
 
   const VoteModal({
     super.key,
     required this.post,
     required this.postCubit,
+    required this.postBox,
   });
 
   @override
@@ -67,7 +69,6 @@ class VoteModal extends StatelessWidget {
       child: InkWell(
         onTap: () {
           postCubit.voteForOption(option.label);
-          Navigator.pop(context);
         },
         child: Container(
           padding: const EdgeInsets.all(16.0),

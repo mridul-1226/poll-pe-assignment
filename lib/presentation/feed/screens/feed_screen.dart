@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:poll_pe_assignment/presentation/feed/bloc/feed_cubit.dart';
 import 'package:poll_pe_assignment/presentation/poll_creation/poll_creation_screen.dart';
 import 'package:poll_pe_assignment/domain/models/post_model.dart';
 import 'package:poll_pe_assignment/presentation/feed/bloc/post_cubit.dart';
@@ -8,10 +10,12 @@ import 'package:poll_pe_assignment/presentation/feed/widgets/vote_modal.dart';
 
 class SocialMediaFeedPost extends StatefulWidget {
   final List<Post> posts;
+  final Box<Post> postBox;
 
   const SocialMediaFeedPost({
     super.key,
     required this.posts,
+    required this.postBox,
   });
 
   @override
@@ -66,7 +70,9 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const PollCreationScreen(),
+              builder: (context) => PollCreationScreen(
+                postBox: widget.postBox,
+              ),
             ),
           );
         },
@@ -84,7 +90,7 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
             itemCount: widget.posts.length,
             itemBuilder: (context, index) {
               return BlocProvider(
-                create: (_) => PostCubit(widget.posts[index]),
+                create: (_) => PostCubit(widget.posts[index], widget.postBox),
                 child: BlocBuilder<PostCubit, Post>(
                   builder: (context, post) {
                     return Card(
@@ -168,20 +174,26 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
                                   color: Colors.grey,
                                   label: '${post.comments.length}',
                                   onTap: () {
-                                    final postCubit = context.read<PostCubit>();
                                     showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(20),
+                                        context: context,
+                                        isScrollControlled: true,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
+                                          ),
                                         ),
-                                      ),
-                                      builder: (_) => CommentModal(
-                                        post: post,
-                                        postCubit: postCubit,
-                                      ),
-                                    );
+                                        builder: (_) {
+                                          return BlocProvider(
+                                            create: (_) => PostCubit(post,
+                                                Hive.box<Post>('postBox')),
+                                            child: CommentModal(
+                                              post: post,
+                                              postCubit:
+                                                  context.read<PostCubit>(),
+                                              postBox: widget.postBox,
+                                            ),
+                                          );
+                                        });
                                   },
                                 ),
                                 _buildActionButton(
@@ -189,20 +201,26 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
                                   color: Colors.grey,
                                   label: 'Vote',
                                   onTap: () {
-                                    final postCubit = context.read<PostCubit>();
                                     showModalBottomSheet(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(20),
+                                        context: context,
+                                        isScrollControlled: true,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
+                                          ),
                                         ),
-                                      ),
-                                      builder: (_) => VoteModal(
-                                        post: post,
-                                        postCubit: postCubit,
-                                      ),
-                                    );
+                                        builder: (_) {
+                                          return BlocProvider(
+                                            create: (_) => PostCubit(post,
+                                                Hive.box<Post>('postBox')),
+                                            child: VoteModal(
+                                              post: post,
+                                              postCubit:
+                                                  context.read<PostCubit>(),
+                                              postBox: widget.postBox,
+                                            ),
+                                          );
+                                        });
                                   },
                                 ),
                               ],

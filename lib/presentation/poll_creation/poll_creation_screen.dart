@@ -4,7 +4,8 @@ import 'package:poll_pe_assignment/presentation/feed/screens/feed_screen.dart';
 import '../../domain/models/post_model.dart';
 
 class PollCreationScreen extends StatefulWidget {
-  const PollCreationScreen({super.key});
+  final Box<Post> postBox;
+  const PollCreationScreen({super.key, required this.postBox});
 
   @override
   State<PollCreationScreen> createState() => _PollCreationScreenState();
@@ -31,12 +32,13 @@ class _PollCreationScreenState extends State<PollCreationScreen> {
         voteOptions:
             _options.map((option) => VoteOption(label: option)).toList(),
       );
-      await _postBox.add(newPost);
+      await _postBox.put(newPost.id,newPost);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
           builder: (context) => SocialMediaFeedPost(
             posts: _postBox.values.toList(),
+            postBox: widget.postBox,
           ),
         ),
         (route) => false,

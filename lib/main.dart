@@ -9,12 +9,13 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(PostAdapter());
   Hive.registerAdapter(VoteOptionAdapter());
-  await Hive.openBox<Post>('postBox');
+  final postBox = await Hive.openBox<Post>('postBox');
 
   runApp(
     MaterialApp(
       home: SocialMediaFeedPost(
         posts: Hive.box<Post>('postBox').values.toList(),
+        postBox: postBox,
       ),
     ),
   );

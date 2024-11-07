@@ -26,7 +26,6 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
   late AnimationController _heartAnimationController;
   late Animation<double> _heartAnimation;
   bool _isLikeAnimating = false;
-  List<Post> _posts = [];
 
   @override
   void initState() {
@@ -41,20 +40,12 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
         curve: Curves.elasticOut,
       ),
     );
-
-    _loadPosts();
   }
 
   @override
   void dispose() {
     _heartAnimationController.dispose();
     super.dispose();
-  }
-
-  void _loadPosts() {
-    setState(() {
-      _posts = widget.postBox.values.toList();
-    });
   }
 
   void _handleLikeAnimation() {
@@ -82,7 +73,7 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
                 postBox: widget.postBox,
               ),
             ),
-          ).then((_) => _loadPosts());
+          );
         },
         backgroundColor: Colors.deepPurple,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -180,7 +171,7 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
                                 _buildActionButton(
                                   icon: Icons.comment_outlined,
                                   color: Colors.grey,
-                                  label: '',
+                                  label: '${post.comments.length}',
                                   onTap: () {
                                     showModalBottomSheet(
                                         context: context,
@@ -196,10 +187,12 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
                                                 Hive.box<Post>('postBox')),
                                             child: CommentModal(
                                               post: post,
+                                              postCubit:
+                                                  context.read<PostCubit>(),
                                               postBox: widget.postBox,
                                             ),
                                           );
-                                        }).whenComplete(() => _loadPosts());
+                                        });
                                   },
                                 ),
                                 _buildActionButton(
@@ -224,7 +217,7 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
                                                   context.read<PostCubit>(),
                                             ),
                                           );
-                                        }).whenComplete(() => _loadPosts());
+                                        });
                                   },
                                 ),
                               ],

@@ -19,7 +19,7 @@ class PostCubit extends Cubit<Post> {
     _savePost(updatedPost);
   }
 
-  void addComment(String comment) async{
+  void addComment(String comment) async {
     final updatedComments = List<String>.from(state.comments)..add(comment);
     final updatedPost = state.copyWith(comments: updatedComments);
 
@@ -29,19 +29,12 @@ class PostCubit extends Cubit<Post> {
   }
 
   void voteForOption(String optionLabel) {
-    final totalVotes = state.voteOptions.fold<double>(
-      0,
-      (sum, option) => sum + option.value,
-    );
-
     final updatedOptions = state.voteOptions.map((option) {
       if (option.label == optionLabel) {
-        return option.copyWith(
-          value: ((option.value * totalVotes + 1) / (totalVotes + 1)) * 100,
-        );
+        return option.copyWith(value: (option.value + 1));
       } else {
         return option.copyWith(
-          value: ((option.value * totalVotes) / (totalVotes + 1)) * 100,
+          value: ((option.value)),
         );
       }
     }).toList();
@@ -53,7 +46,6 @@ class PostCubit extends Cubit<Post> {
   }
 
   Future<void> _savePost(Post updatedPost) {
-    print(updatedPost.id);
     return postBox.put(updatedPost.id, updatedPost);
   }
 }

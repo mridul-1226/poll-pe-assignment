@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
-import 'package:poll_pe_assignment/presentation/feed/bloc/feed_cubit.dart';
 import 'package:poll_pe_assignment/presentation/poll_creation/poll_creation_screen.dart';
 import 'package:poll_pe_assignment/domain/models/post_model.dart';
 import 'package:poll_pe_assignment/presentation/feed/bloc/post_cubit.dart';
@@ -214,10 +213,8 @@ class _SocialMediaFeedPostState extends State<SocialMediaFeedPost>
                                             create: (_) => PostCubit(post,
                                                 Hive.box<Post>('postBox')),
                                             child: VoteModal(
-                                              post: post,
                                               postCubit:
                                                   context.read<PostCubit>(),
-                                              postBox: widget.postBox,
                                             ),
                                           );
                                         });

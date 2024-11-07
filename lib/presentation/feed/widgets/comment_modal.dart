@@ -7,14 +7,12 @@ import 'package:poll_pe_assignment/presentation/feed/bloc/post_cubit.dart';
 class CommentModal extends StatelessWidget {
   final Post post;
   final Box<Post> postBox;
-  final PostCubit postCubit;
   final TextEditingController _commentController = TextEditingController();
 
   CommentModal({
     super.key,
     required this.post,
     required this.postBox,
-    required this.postCubit,
   });
 
   @override
@@ -23,6 +21,8 @@ class CommentModal extends StatelessWidget {
       create: (context) => PostCubit(post, postBox),
       child: BlocBuilder<PostCubit, Post>(
         builder: (context, postState) {
+          final postCubit = context.read<PostCubit>();
+
           return Container(
             height: MediaQuery.of(context).size.height * 0.75,
             padding: const EdgeInsets.all(16.0),
